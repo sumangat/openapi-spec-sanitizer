@@ -22,8 +22,8 @@ import json
 import os
 from pathlib import Path
 
-from .exceptions import InvalidFileException
-from .loader import Loader, OpenapiFormat
+from exceptions import InvalidFileException
+from loader import Loader, OpenapiFormat
 
 
 class Dumper:

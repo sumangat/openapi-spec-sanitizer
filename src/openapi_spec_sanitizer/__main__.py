@@ -17,9 +17,9 @@
 
 import logging
 
-from .sanitizer import Sanitizer
-from .exceptions import DirtyYamlWarning, Unrecoverable
-from .argparser import ArgParser
+from sanitizer import Sanitizer
+from exceptions import DirtyYamlWarning, Unrecoverable
+from argparser import ArgParser
 
 
 def main():

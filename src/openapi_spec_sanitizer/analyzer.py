@@ -22,9 +22,9 @@ import pprint
 from packaging.version import Version, InvalidVersion
 from enum import Enum
 
-from .stateful import Stateful
-from .entry import Entry
-from .exceptions import UnsupportedYamlException, InvalidYamlException, DirtyYamlWarning
+from stateful import Stateful
+from entry import Entry
+from exceptions import UnsupportedYamlException, InvalidYamlException, DirtyYamlWarning
 
 logger = logging.getLogger('openapi_spec_sanitizer')
 

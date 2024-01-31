@@ -18,12 +18,11 @@ __all__ = ['Sanitizer']
 
 from enum import Enum
 import logging
-
-from .loader import Loader
-from .stateful import Stateful
-from .analyzer import Analyzer, State
-from .exceptions import Unrecoverable, Warning
-from .dumper import Dumper
+from loader import Loader
+from stateful import Stateful
+from analyzer import Analyzer, State
+from exceptions import Unrecoverable, Warning
+from dumper import Dumper
 
 logger = logging.getLogger('openapi_spec_sanitizer')
 

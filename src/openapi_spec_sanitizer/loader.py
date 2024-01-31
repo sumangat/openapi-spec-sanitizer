@@ -24,7 +24,7 @@ import os
 import urllib.request
 from pathlib import Path
 from enum import Enum
-from .exceptions import InvalidFileException
+from exceptions import InvalidFileException
 
 
 class OpenapiFormat(Enum):
