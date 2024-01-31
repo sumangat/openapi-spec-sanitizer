@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ########################################################################
-import oyaml as yaml
 import unittest
-from openapi_spec_sanitizer.sanitizer import Sanitizer
-from openapi_spec_sanitizer.exceptions import InvalidYamlException, UnsupportedYamlException
-from openapi_spec_sanitizer.argparser import ArgParser
+
+import oyaml as yaml
+
+from src.openapi_spec_sanitizer.sanitizer import Sanitizer
+from src.openapi_spec_sanitizer.exceptions import InvalidYamlException, UnsupportedYamlException
+from src.openapi_spec_sanitizer.argparser import ArgParser
 
 
 class TestSanitizer(unittest.TestCase):
@@ -28,7 +30,7 @@ class TestSanitizer(unittest.TestCase):
           snapshot (14/2/23) cached locally so tests can run locally
         """
         # src_url = 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/api-with-examples.yaml'
-        file = "./tests/api-with-examples.yaml"
+        file = "../../tests/api-with-examples.yaml"
         # but can make it dynamic:
         # import urllib.request
         # urllib.request.urlretrieve(src_url, file)
@@ -388,7 +390,7 @@ components:
                             )
 
     def test_less_simple_file(self):
-        file = "./tests/less_simple.yaml"
+        file = "../../tests/less_simple.yaml"
         parser = ArgParser()
         args = parser.parse_args([file])
         sanitizer = Sanitizer(args)
@@ -408,7 +410,7 @@ components:
                             )
 
     def test_less_simple_file_json(self):
-        file = "./tests/less_simple.json"
+        file = "../../tests/less_simple.json"
         parser = ArgParser()
         args = parser.parse_args([file])
         sanitizer = Sanitizer(args)

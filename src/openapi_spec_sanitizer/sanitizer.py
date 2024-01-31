@@ -23,6 +23,7 @@ from stateful import Stateful
 from analyzer import Analyzer, State
 from exceptions import Unrecoverable, Warning
 from dumper import Dumper
+from copy import deepcopy
 
 logger = logging.getLogger('openapi_spec_sanitizer')
 
@@ -43,11 +44,11 @@ class Sanitizer(Stateful):
         self.sanitize_mode = self.SanitizeMode.NONE
         self.orig_yaml = {}
         if self.sanitizing:
-            if args.tag is not None:
+            if args.delete:
+                self.sanitize_mode = self.SanitizeMode.DELETE
+            elif args.tag is not None:
                 self.sanitize_mode = self.SanitizeMode.TAG
                 self.sanitize_tag = args.tag
-            elif (args.delete):
-                self.sanitize_mode = self.SanitizeMode.DELETE
         self.loader = Loader(args)
         self.analyzer = Analyzer(args)
         self.dumper = Dumper(self.loader, args)
@@ -55,10 +56,10 @@ class Sanitizer(Stateful):
     def report(self):
         return self.analyzer.report()
 
-    def dump(self, path):
+    def dump(self):
         self.at_least(State.LOADED, "dump")
         filename = self.output_filename
-        self.dumper.dump(filename)
+        self.dumper.dump(filename, self.orig_yaml)
         logger.info(f"Main: dumping sanitized yaml to {filename}")
 
     def sanitize(self, file):
@@ -66,14 +67,13 @@ class Sanitizer(Stateful):
         try:
             self.analyzer.analyze(self.orig_yaml)
         except Warning as e:
-
             if self.warnings_are_ok:
                 logger.warning(f"Sanitizer: Tolerable issue when analyzing yaml: {e}")
             else:
-                logger.warning(f"Sanitizer: Urecoverable issue when analyzing yaml: {e}")
+                logger.warning(f"Sanitizer: Unrecoverable issue when analyzing yaml: {e}")
                 raise e
         except Unrecoverable as e:
-            logger.error(f"Sanitizer: Urecoverable issue when analyzing yaml: {e}")
+            logger.error(f"Sanitizer: Unrecoverable issue when analyzing yaml: {e}")
             raise e
         if self.sanitizing:
             logger.info("Sanitizing")
@@ -82,7 +82,7 @@ class Sanitizer(Stateful):
         self._state = State.SANITIZED
 
     def _sanitize(self, node, path):
-        if type(node) == list:
+        if type(node) is list:
             unused_nodes = []
             for i, element in enumerate(node):
                 dest_path = path+(i, )
@@ -93,10 +93,10 @@ class Sanitizer(Stateful):
                     unused_nodes.append(i)
                 self._sanitize(element, dest_path)
             for i in sorted(unused_nodes, reverse=True):
-                self._sanitize_node(node[i])
+                del node[i]
             # remove bogus __line__
             node = [kv for kv in node if '__line__' not in kv]
-        elif type(node) == dict:
+        elif type(node) is dict:
             unused_nodes = set()
             for key, value in node.items():
                 dest_path = path+(key, )
@@ -107,13 +107,7 @@ class Sanitizer(Stateful):
                     print(f"Marking node {dest_path} as unused")
                 self._sanitize(node[key], dest_path)
             for key in unused_nodes:
-                self._sanitize_node(node[key])
+                del node[key]
             # remove bogus __line__
             node.pop('__line__', None)
 
-    def _sanitize_node(self, node):
-        """ Assumes node is a dict! """
-        if self.SanitizeMode.TAG == self.sanitize_mode:
-            node[self.sanitize_tag] = True
-        elif self.SanitizeMode.DELETE == self.sanitize_mode:
-            del node

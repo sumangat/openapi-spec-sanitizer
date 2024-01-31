@@ -1,6 +1,6 @@
 openapi: 3.0.0
 paths:
-  '/wibble':
+  /wibble:
     post:
       summary: wobble
       requestBody:
@@ -13,14 +13,7 @@ paths:
         '401':
           $ref: '#/components/responses/responseCRequired'
 components:
-  parameters:
-    unusedParameter:
-      name: unusedParameter
-      description: An unused parameter
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/schemaPlain'
+  parameters: {}
   requestBodies:
     requestBodyARequired:
       description: used by /wibble/post/requestBody
@@ -37,7 +30,7 @@ components:
           schema:
             $ref: '#/components/schemas/schemaPlain'
     responseBRequired:
-      description:  Used by /wibble/responses/400
+      description: Used by /wibble/responses/400
       headers:
         OB-Request-Id:
           schema:
@@ -49,28 +42,23 @@ components:
           schema:
             $ref: '#/components/schemas/schemaC'
   schemas:
-    schemaA:
-      type: array
-      description:  Unused
-      items:
-        $ref: '#/components/schemas/schemaAB'
     schemaAB:
       type: array
-      description:  used by the requestBodyARequired and the unused /schemas/schemaA
+      description: used by the requestBodyARequired and the unused /schemas/schemaA
       items:
         $ref: '#/components/schemas/schemaAC'
     schemaAC:
       type: array
-      description:  used but by the unused /schemas/schemaA
+      description: used but by the unused /schemas/schemaA
       items:
         $ref: '#/components/schemas/schemaC'
     schemaC:
       type: array
-      description:  Used by /reponses/responseC
+      description: Used by /reponses/responseC
       items:
         $ref: '#/components/schemas/schemaPlain'
     schemaPlain:
       type: array
-      description:  Used by various
+      description: Used by various
       items:
         type: string

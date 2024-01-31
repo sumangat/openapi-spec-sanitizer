@@ -107,12 +107,12 @@ class Analyzer(Stateful):
         self._state = State.PARSED
         self._capture()
 
-        if (self.undefined_components):
+        if self.undefined_components:
             logger.debug(f"Analyzer failed with {len(self.undefined_components)} undefined_components")
             raise InvalidYamlException(f"Undefined elements: {', '.join(self.undefined_components.keys())}")
         if self.unused_components:
             logger.debug(f"Analyzer failed with {len(self.unused_components)} unused_components")
-            raise DirtyYamlWarning("Unused elements")
+            # raise DirtyYamlWarning("Unused elements")
 
     def _ref_remote(self, value):
         regex = re.compile(r'^(.+\.yaml)', re.IGNORECASE)
@@ -152,7 +152,7 @@ class Analyzer(Stateful):
                 # implicit: this is a component
                 curr_node.set_component(curr_parent_component)
             for key in dictionary.keys():
-                if ('$ref' == key):
+                if '$ref' == key:
                     value = dictionary[key]
                     if self._ref_remote(value):
                         raise UnsupportedYamlException("Unsupported Remote reference, " +

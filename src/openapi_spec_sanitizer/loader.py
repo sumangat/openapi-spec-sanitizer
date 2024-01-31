@@ -15,7 +15,10 @@
 # limitations under the License.
 ########################################################################
 
-__all__ = ['Loader']
+__all__ = [
+    'Loader',
+    'OpenapiFormat'
+    ]
 
 import re
 import oyaml as yaml
@@ -78,7 +81,7 @@ class Loader:
             if openapi_fmt is not OpenapiFormat.NONE:
                 self.openapi_format = openapi_fmt
             else:
-                raise InvalidFileException("Uanble to determine openapi format")
+                raise InvalidFileException("Unable to determine openapi format")
         else:
             root, ext = os.path.splitext(name)
             if ext == '.yaml':
@@ -86,7 +89,7 @@ class Loader:
             elif ext == '.json':
                 self.openapi_format = OpenapiFormat.JSON
             else:
-                raise InvalidFileException("Uanble to determine openapi format")
+                raise InvalidFileException("Unable to determine openapi format")
         return self.openapi_format
 
     def load_path(self, file_path):
@@ -102,7 +105,7 @@ class Loader:
 
     def load(self, file):
         # TODO make this a factory
-        if (Path(file).exists() and Path(file).is_file()):
+        if Path(file).exists() and Path(file).is_file():
             self._yaml_format(file)
             return self.load_path(file)
         regex = re.compile(r'^(?:http|ftp)s?://.*/(?P<filename>(?P<root>.*)(?P<ext>\.\w*))$', re.IGNORECASE)

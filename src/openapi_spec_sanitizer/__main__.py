@@ -43,7 +43,7 @@ def main():
     epitaph = ''
     try:
         sanitizer.sanitize(args.filename)
-        sanitizer.dump("test.yaml")
+        sanitizer.dump()
     except DirtyYamlWarning as e:
         # these don't percolate up (yet!)
         print(f"Main: Tolerable issue with {e}")

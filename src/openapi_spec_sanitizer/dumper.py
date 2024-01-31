@@ -15,12 +15,13 @@
 # limitations under the License.
 ########################################################################
 
-__all__ = ['Loader']
+__all__ = ['Dumper']
 
-import oyaml as yaml
 import json
 import os
 from pathlib import Path
+
+import yaml
 
 from exceptions import InvalidFileException
 from loader import Loader, OpenapiFormat
@@ -30,8 +31,7 @@ class Dumper:
     def __init__(self, loader, args):
         self.loader = loader
 
-    def dump(self, filename):
-        filename = self.output_filename
+    def dump(self, filename, data):
         loader_filename = self.loader.get_filename()
         if filename is None:
             if loader_filename is None:
@@ -46,6 +46,6 @@ class Dumper:
 
         with open(filename, 'w', encoding='utf-8') as file:
             if OpenapiFormat.YAML == self.loader.get_openapi_format():
-                yaml.dump(self.orig_yaml, file, width=1000)
+                yaml.dump(data, file, width=1000)
             elif OpenapiFormat.JSON == self.loader.get_openapi_format():
-                json.dump(self.orig_yaml, file, ensure_ascii=False, indent=4)
+                json.dump(data, file, ensure_ascii=False, indent=4)
