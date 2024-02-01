@@ -16,15 +16,16 @@
 ########################################################################
 
 import collections
-import re
 import logging
 import pprint
-from packaging.version import Version, InvalidVersion
+import re
 from enum import Enum
 
-from stateful import Stateful
+from packaging.version import Version, InvalidVersion
+
 from entry import Entry
-from exceptions import UnsupportedYamlException, InvalidYamlException, DirtyYamlWarning
+from exceptions import UnsupportedYamlException, InvalidYamlException
+from stateful import Stateful
 
 logger = logging.getLogger('openapi_spec_sanitizer')
 
@@ -43,7 +44,7 @@ class Analyzer(Stateful):
             self.referrers = referrers
 
         def __str__(self):
-            stringy = f"Cmponent Path: {self.path}"
+            stringy = f"Component Path: {self.path}"
             for referrer in self.referrers:
                 stringy += f"\n  Referrer: {referrer}"
             return stringy
@@ -72,11 +73,11 @@ class Analyzer(Stateful):
             for undefined_component in self.undefined_components:
                 stringy += '  ' + pprint.pformat(undefined_component) + '\n'
         if self.unused_components:
-            stringy += "Uunused components \n"
+            stringy += "Unused components \n"
             for key, unused_component in self.unused_components.items():
                 stringy += f'  path: {key}\n'
                 stringy += '         ' + pprint.pformat(unused_component) + '\n'
-        stringy += "----------------------- ~Analyzer Report ----------------\n"
+        stringy += "----------------------- Analyzer Report ----------------\n"
         return stringy
 
     def _swagger_ver(self):
@@ -90,7 +91,7 @@ class Analyzer(Stateful):
             try:
                 # self._version = int(parse_version(self.document['openapi']).major)
                 self._version = Version(self.document['openapi']).major
-                if (self._version != 3):
+                if self._version != 3:
                     raise InvalidYamlException(f"openapi version failed, must be 3, but is {self._version}")
             except (AttributeError, InvalidVersion) as exc:
                 raise InvalidYamlException(f"version failed whilst parsing '{self.document['openapi']}'") from exc

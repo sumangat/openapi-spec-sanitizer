@@ -23,7 +23,7 @@ from stateful import Stateful
 from analyzer import Analyzer, State
 from exceptions import Unrecoverable, Warning
 from dumper import Dumper
-from copy import deepcopy
+from splitter import Splitter
 
 logger = logging.getLogger('openapi_spec_sanitizer')
 
@@ -43,15 +43,10 @@ class Sanitizer(Stateful):
         self.warnings_are_ok = args.warnings_are_ok
         self.sanitize_mode = self.SanitizeMode.NONE
         self.orig_yaml = {}
-        if self.sanitizing:
-            if args.delete:
-                self.sanitize_mode = self.SanitizeMode.DELETE
-            elif args.tag is not None:
-                self.sanitize_mode = self.SanitizeMode.TAG
-                self.sanitize_tag = args.tag
         self.loader = Loader(args)
         self.analyzer = Analyzer(args)
         self.dumper = Dumper(self.loader, args)
+        self.splitter = Splitter(args)
 
     def report(self):
         return self.analyzer.report()
@@ -63,7 +58,7 @@ class Sanitizer(Stateful):
         logger.info(f"Main: dumping sanitized yaml to {filename}")
 
     def sanitize(self, file):
-        self.orig_yaml = self.loader.load(file)
+        self.orig_yaml = self.splitter.split_yaml(file)
         try:
             self.analyzer.analyze(self.orig_yaml)
         except Warning as e:

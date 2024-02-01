@@ -93,7 +93,6 @@ class Loader:
         return self.openapi_format
 
     def load_path(self, file_path):
-
         with open(file_path, 'r', encoding='utf-8') as file:
             if OpenapiFormat.YAML == self.openapi_format:
                 self.document = yaml.load(file, Loader=self.loader)

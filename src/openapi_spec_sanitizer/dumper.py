@@ -45,7 +45,4 @@ class Dumper:
             raise InvalidFileException(f"will not overwrite existing file {filename}")
 
         with open(filename, 'w', encoding='utf-8') as file:
-            if OpenapiFormat.YAML == self.loader.get_openapi_format():
-                yaml.dump(data, file, width=1000)
-            elif OpenapiFormat.JSON == self.loader.get_openapi_format():
-                json.dump(data, file, ensure_ascii=False, indent=4)
+            yaml.dump(data, file, width=1000)

@@ -38,15 +38,9 @@ class ArgParser():
                                       )
 
         mod_group = sanitizing_group.add_mutually_exclusive_group()
-        mod_group.add_argument('-t', '--tag',
-                               type=str,
-                               default="unused",
-                               help="sanitize mode is to tag component"
-                               )
-        mod_group.add_argument('-r', '--remove',
-                               dest='delete',
-                               action='store_true',
-                               help="Sanitize mode is to remove component"
+        mod_group.add_argument('-t', '--tags',
+                               nargs='+',
+                               help="The tags that need to be extracted from the input contract"
                                )
 
         openapi_format_group = sanitizing_group.add_mutually_exclusive_group()
