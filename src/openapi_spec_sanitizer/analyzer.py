@@ -133,16 +133,16 @@ class Analyzer(Stateful):
            parent_path       path to parent, a tuple of breadcrumbs
            parent_component  the component this is part of (if any)
         """
-        if type(dictionary) == list:
+        if type(dictionary) is list:
             for i, element in enumerate(dictionary):
                 self._analyze(element, parent_path+(i,), parent_component)
-        elif type(dictionary) == dict:
+        elif type(dictionary) is dict:
             node_path = ''.join(['/' + str(node) for node in parent_path])
             line_no = dictionary.get('__line__', None)
             curr_parent_component = parent_component
             curr_node = None
 
-            if (self._is_component(parent_path)):
+            if self._is_component(parent_path):
                 curr_node = self._get_node(node_path, 'Component')
                 curr_node.declare(line_no)
                 if parent_component is not None:
@@ -208,6 +208,8 @@ class Analyzer(Stateful):
                                                     'requestBodies',
                                                     'responses',
                                                     'schemas',
+                                                    'headers',
+                                                    'links',
                                                     'securitySchemas')):
             return True
         elif (2.0 == self._version and

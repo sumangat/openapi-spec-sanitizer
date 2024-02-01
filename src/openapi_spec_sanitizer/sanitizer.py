@@ -95,7 +95,7 @@ class Sanitizer(Stateful):
             for i in sorted(unused_nodes, reverse=True):
                 del node[i]
             # remove bogus __line__
-            node = [kv for kv in node if '__line__' not in kv]
+            # node = [kv for kv in node if '__line__' not in kv]
         elif type(node) is dict:
             unused_nodes = set()
             for key, value in node.items():
