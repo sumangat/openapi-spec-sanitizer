@@ -67,6 +67,8 @@ Sanitizing Options:
   -s, --sanitize        Attempt to sanitize spec file (default False)
   -t TAG, --tag TAG     sanitize mode is to tag component
   -r, --remove          Sanitize mode is to remove component
+  
+Example: `python3 __main__.py <input_file> -s -t <tag that you need to extract> -o <output_file>`
 ```
 
 ## Examples
